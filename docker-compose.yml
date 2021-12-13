@@ -1,0 +1,53 @@
+version: '3'
+services:
+  web:
+    container_name: front
+    build: ./web
+    ports:
+      - 3000:3000
+    # networks:
+    #   - front-tier
+
+  server:
+    container_name: back
+    build: ./server
+    ports:
+      - 4000:4000
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: instart
+    # networks:
+    #   - front-tier
+    #   - back-tier
+    depends_on:
+      - db
+      - redis
+
+  db:
+    container_name: database
+    image: 'postgres:latest'
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: instart
+    # networks:
+    #   - back-tier
+
+  redis:
+    container_name: instart_redis
+    image: 'bitnami/redis:latest'
+    ports:
+      - 6379:6379
+    environment:
+        - ALLOW_EMPTY_PASSWORD=yes
+#     networks:
+#       - back-tier
+
+# networks:
+#   front-tier:
+#     driver: 'bridge'
+#   back-tier:
+#     driver: 'bridge'

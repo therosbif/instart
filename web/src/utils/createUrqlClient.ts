@@ -83,10 +83,10 @@ function invalidateAllPosts(cache: Cache) {
 }
 
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
-  const cookie = isServer() ? ctx.req.headers.cookie : "";
+  const cookie = isServer() ? ctx?.req.headers.cookie : "";
 
   return {
-    url: "http://localhost:4000/graphql",
+    url: isServer() ? "http://back:4000/graphql" : "http://localhost:4000/graphql",
     fetchOptions: {
       credentials: "include" as const,
       headers: cookie

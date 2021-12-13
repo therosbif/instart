@@ -22,22 +22,22 @@ import { createVoteLoader } from "./utils/createVoteLoader";
 const main = async () => {
   const conn = await createConnection({
     type: "postgres",
-    database: "instart",
-    username: "postgres",
-    password: "postgres",
+    database: process.env.POSTGRES_DB,
+    username: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Post, User, Vote],
+    host: 'database',
   });
   await conn.runMigrations();
 
   //await Post.delete({});
 
   const app = express();
-
   const RedisStore = connectRedis(session);
-  const redis = new Redis();
+  const redis = new Redis({host: 'redis'});
 
   app.use(
     cors({
@@ -52,6 +52,7 @@ const main = async () => {
         client: redis,
         disableTTL: true,
         disableTouch: true,
+        host: 'instart_redis'
       }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years

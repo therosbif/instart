@@ -9,7 +9,6 @@ interface MediaProps {
 }
 
 export const Media: React.FC<MediaProps> = ({ p }) => {
-  console.log("type ", p.type);
   if (p.type === 0) {
     return <Image src={p.path} alt={p.title} />;
   }
